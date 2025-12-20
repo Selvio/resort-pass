@@ -12,7 +12,7 @@ function Tabs({
   return (
     <TabsPrimitive.Root
       data-slot="tabs"
-      className={cn("flex flex-col gap-2", className)}
+      className={cn("flex flex-col", className)}
       {...props}
     />
   );
@@ -26,7 +26,7 @@ function TabsList({
     <TabsPrimitive.List
       data-slot="tabs-list"
       className={cn(
-        "inline-flex h-auto w-full items-center justify-center -mb-0.5",
+        "inline-flex h-auto w-full items-center justify-center px-4 border-b border-gray-light",
         className
       )}
       {...props}
@@ -42,7 +42,9 @@ function TabsTrigger({
     <TabsPrimitive.Trigger
       data-slot="tabs-trigger"
       className={cn(
-        "inline-flex w-full items-center justify-center px-0 py-2 text-sm whitespace-nowrap transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-primary text-secondary cursor-pointer [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        "-mb-px inline-flex w-full items-center justify-center px-0 py-2 text-sm whitespace-nowrap transition-colors focus-visible:outline-none",
+        "disabled:pointer-events-none disabled:opacity-50 border-b border-transparent data-[state=active]:border-primary data-[state=active]:text-primary text-secondary cursor-pointer",
+        "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         className
       )}
       {...props}
@@ -57,7 +59,7 @@ function TabsContent({
   return (
     <TabsPrimitive.Content
       data-slot="tabs-content"
-      className={cn("flex-1 outline-none", className)}
+      className={cn("flex-1 outline-none p-0!", className)}
       {...props}
     />
   );

@@ -4,11 +4,7 @@ import { cn } from "@/lib/utils";
 
 function Card({ className, ...props }: React.ComponentProps<"div">) {
   return (
-    <div
-      data-slot="card"
-      className={cn("bg-white flex flex-col gap-6", className)}
-      {...props}
-    />
+    <div data-slot="card" className={cn("bg-white", className)} {...props} />
   );
 }
 

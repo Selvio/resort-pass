@@ -9,22 +9,34 @@ const RESORTPASS_API_URL =
  * Fetches and normalizes hotels data from the external API
  */
 export async function fetchHotels(): Promise<SearchResponse> {
-  const response = await fetch(RESORTPASS_API_URL, {
-    next: { revalidate: 3600 },
-  });
+  try {
+    const response = await fetch(RESORTPASS_API_URL, {
+      next: { revalidate: 3600 },
+    });
 
-  if (!response.ok) {
-    throw new Error("Failed to fetch hotels data");
+    if (!response.ok) {
+      throw new Error(
+        `Failed to fetch hotels data: ${response.status} ${response.statusText}`
+      );
+    }
+
+    const rawData = await response.json();
+
+    // Normalize all keys to camelCase recursively
+    const normalizedData = camelcaseKeys(rawData, {
+      deep: true,
+    });
+
+    return normalizedData;
+  } catch (error) {
+    // Re-throw with more context if it's not already an Error
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error(
+      "Failed to fetch hotels data: Network error or invalid response"
+    );
   }
-
-  const rawData = await response.json();
-
-  // Normalize all keys to camelCase recursively
-  const normalizedData = camelcaseKeys(rawData, {
-    deep: true,
-  });
-
-  return normalizedData;
 }
 
 /**

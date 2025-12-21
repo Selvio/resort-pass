@@ -7,12 +7,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { amenityIcons } from "@/lib/amenityIcons";
 import { formatPrice } from "@/lib/utils";
-import { type Hotel } from "@/types";
+import type { Currency, Hotel } from "@/types";
 
 import HotelImageCarousel from "./HotelImageCarousel";
 
 interface HotelCardProps {
   hotel: Hotel;
+  currency?: Currency;
 }
 
 const renderStars = (rating: number) => {
@@ -40,9 +41,9 @@ const renderStars = (rating: number) => {
   );
 };
 
-const HotelCard = ({ hotel }: HotelCardProps) => {
+const HotelCard = ({ hotel, currency }: HotelCardProps) => {
   const [showAllProducts, setShowAllProducts] = useState(false);
-  const currencySymbol = "$";
+  const currencySymbol = currency?.symbol || "$";
   const rating = hotel.avgRating || hotel.rating || 0;
   const reviews = hotel.reviews || 0;
   const primaryVibe = hotel.vibes?.primary || "";

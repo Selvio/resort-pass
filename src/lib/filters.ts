@@ -4,11 +4,6 @@ import {
   EARTH_RADIUS_MILES,
   TOP_RATED_MIN_RATING,
 } from "@/lib/constants";
-import {
-  filterHotelsByPool,
-  filterHotelsBySpa,
-  filterHotelsByDayRoom,
-} from "@/lib/hotels";
 import { searchLocations } from "@/lib/locations";
 import type { Hotel } from "@/types";
 
@@ -51,6 +46,53 @@ const AMENITY_MAPPING: Record<string, string[]> = {
   "hot-tub": ["hottub"],
   "lazy-river": ["lazyriver"],
 };
+
+/**
+ * Filters hotels that have pool-related products
+ * @param hotels - Array of hotels to filter
+ * @returns Array of hotels with pool-related products
+ */
+export function filterHotelsByPool(hotels: Hotel[]): Hotel[] {
+  const poolProductTypes = ["Day Pass", "Cabana", "Daybed", "Beach Pass"];
+
+  return hotels.filter((hotel) =>
+    hotel.products?.some((product) =>
+      poolProductTypes.includes(product.productTypeName)
+    )
+  );
+}
+
+/**
+ * Filters hotels that have spa-related products
+ * @param hotels - Array of hotels to filter
+ * @returns Array of hotels with spa-related products
+ */
+export function filterHotelsBySpa(hotels: Hotel[]): Hotel[] {
+  const spaProductTypes = [
+    "Spa Pass",
+    "Massage",
+    "Facial",
+    "Spa Treatment",
+    "Couples Spa",
+  ];
+
+  return hotels.filter((hotel) =>
+    hotel.products?.some((product) =>
+      spaProductTypes.includes(product.productTypeName)
+    )
+  );
+}
+
+/**
+ * Filters hotels that have Day Room products
+ * @param hotels - Array of hotels to filter
+ * @returns Array of hotels with Day Room products
+ */
+export function filterHotelsByDayRoom(hotels: Hotel[]): Hotel[] {
+  return hotels.filter((hotel) =>
+    hotel.products?.some((product) => product.productTypeName === "Day Room")
+  );
+}
 
 /**
  * Filters hotels by location (within specified radius)
@@ -195,7 +237,7 @@ export function filterByVibes(hotels: Hotel[], vibes: string[]): Hotel[] {
   return hotels.filter((hotel) => {
     const hotelVibes = [hotel.vibes?.primary, hotel.vibes?.secondary].filter(
       Boolean
-    ) as string[];
+    );
 
     // Check if hotel has any of the selected vibes
     return vibes.some((vibe) => hotelVibes.includes(vibe));

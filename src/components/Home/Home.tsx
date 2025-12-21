@@ -10,14 +10,9 @@ import SearchBar from "@/components/SearchBar";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useSearch } from "@/contexts/SearchContext";
-import { applyFilters } from "@/lib/hotelFilters";
-import { getAllHotels } from "@/lib/hotels";
+import { applyFilters } from "@/lib/filters";
 import { searchLocations } from "@/lib/locations";
-import { SearchResponse } from "@/types";
-
-import mockData from "../../../mock.json";
-
-const hotels = getAllHotels(mockData as unknown as SearchResponse);
+import { Currency, Hotel } from "@/types";
 
 const TABS_CONFIG = [
   { value: "all", label: "All", titlePrefix: "Hotel" },
@@ -26,7 +21,12 @@ const TABS_CONFIG = [
   { value: "day-room", label: "Day Room", titlePrefix: "Day room" },
 ];
 
-const Home = () => {
+interface HomeProps {
+  hotels: Hotel[];
+  currency?: Currency;
+}
+
+const Home = ({ hotels, currency }: HomeProps) => {
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("all");
   const { state: searchState, clearAllFilters } = useSearch();
@@ -42,7 +42,7 @@ const Home = () => {
   // Apply all filters based on search state and active tab
   const filteredHotels = useMemo(
     () => applyFilters(hotels, searchState, activeTab),
-    [searchState, activeTab]
+    [hotels, searchState, activeTab]
   );
 
   // Get the selected location name
@@ -106,7 +106,7 @@ const Home = () => {
             ) : (
               <div className="grid grid-cols-1 gap-4">
                 {filteredHotels.map((hotel) => (
-                  <HotelCard key={hotel.id} hotel={hotel} />
+                  <HotelCard key={hotel.id} hotel={hotel} currency={currency} />
                 ))}
               </div>
             )}

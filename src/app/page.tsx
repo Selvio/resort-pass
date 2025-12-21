@@ -1,3 +1,7 @@
+"use client";
+
+import { useState } from "react";
+
 import Header from "@/components/Header";
 import { HotelCard } from "@/components/HotelCard";
 import SearchBar from "@/components/SearchBar";
@@ -9,6 +13,7 @@ import {
   filterHotelsBySpa,
   filterHotelsByDayRoom,
 } from "@/lib/hotels";
+import { searchLocations } from "@/lib/locations";
 import { SearchResponse } from "@/types";
 
 import mockData from "../../mock.json";
@@ -20,6 +25,12 @@ const spaHotels = filterHotelsBySpa(hotels);
 const dayRoomHotels = filterHotelsByDayRoom(hotels);
 
 export default function Home() {
+  const [location, setLocation] = useState<string>(searchLocations[0].id);
+
+  const handleLocationChange = (newLocation: string) => {
+    setLocation(newLocation);
+  };
+
   return (
     <div className="text-sm h-screen flex flex-col overflow-hidden">
       <div className="shrink-0">
@@ -31,7 +42,10 @@ export default function Home() {
         </div>
         <Header />
         <div className="px-4 pt-4">
-          <SearchBar />
+          <SearchBar
+            location={location}
+            handleLocationChange={handleLocationChange}
+          />
         </div>
       </div>
       <Tabs defaultValue="all" className="flex flex-col flex-1 min-h-0">

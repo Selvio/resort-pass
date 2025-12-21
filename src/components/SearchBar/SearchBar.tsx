@@ -1,31 +1,34 @@
-import { MapPin, Calendar, SlidersHorizontal } from "lucide-react";
+"use client";
 
+import { Calendar, SlidersHorizontal } from "lucide-react";
+
+import LocationSearch from "@/components/LocationSearch";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
 interface SearchBarProps {
-  location?: string;
+  location: string;
   date?: string;
-  onLocationClick?: () => void;
+  handleLocationChange: (location: string) => void;
   onDateClick?: () => void;
   onFiltersClick?: () => void;
 }
 
 const SearchBar = ({
-  location = "Miami, FL",
+  location,
   date = "Feb 26",
-  onLocationClick,
+  handleLocationChange,
   onDateClick,
   onFiltersClick,
 }: SearchBarProps) => {
   return (
     <div className="flex items-center rounded-lg overflow-hidden border border-gray-light">
-      <div className="flex items-center w-full justify-between">
+      <div className="grid grid-cols-2 w-full">
         <div className="flex justify-start flex-1">
-          <Button onClick={onLocationClick} variant="ghost">
-            <MapPin className="size-5 text-primary" />
-            {location}
-          </Button>
+          <LocationSearch
+            value={location}
+            onValueChange={handleLocationChange}
+          />
         </div>
 
         <div className="flex items-center justify-start flex-1">

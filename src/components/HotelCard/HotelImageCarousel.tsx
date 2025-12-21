@@ -16,7 +16,7 @@ interface HotelImageCarouselProps {
   hotel: Hotel;
 }
 
-export function HotelImageCarousel({ hotel }: HotelImageCarouselProps) {
+const HotelImageCarousel = ({ hotel }: HotelImageCarouselProps) => {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
 
@@ -78,4 +78,6 @@ export function HotelImageCarousel({ hotel }: HotelImageCarouselProps) {
       )}
     </div>
   );
-}
+};
+
+export default HotelImageCarousel;

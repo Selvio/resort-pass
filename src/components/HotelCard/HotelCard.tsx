@@ -1,58 +1,19 @@
-import {
-  Accessibility,
-  Building2,
-  Bus,
-  ChevronRight,
-  Droplet,
-  Dumbbell,
-  Flower,
-  Lock,
-  Luggage,
-  Shirt,
-  Star,
-  Toilet,
-  TrendingDown,
-  Umbrella,
-  UtensilsCrossed,
-  Waves,
-  WavesLadder,
-  Wine,
-} from "lucide-react";
-import { Fragment, ReactNode } from "react";
+import { ChevronRight, Star } from "lucide-react";
+import { Fragment } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { amenityIcons } from "@/lib/amenityIcons";
 import { formatPrice } from "@/lib/utils";
 import { type Hotel } from "@/types";
 
-import { HotelImageCarousel } from "./HotelImageCarousel";
+import HotelImageCarousel from "./HotelImageCarousel";
 
 interface HotelCardProps {
   hotel: Hotel;
 }
-
-const amenityIcons: Record<string, ReactNode> = {
-  drink: <Wine className="size-5" />,
-  food: <UtensilsCrossed className="size-5" />,
-  cabana: <Umbrella className="size-5" />,
-  pool: <WavesLadder className="size-5" />,
-  "fitness-center": <Dumbbell className="size-5" />,
-  beach: <Umbrella className="size-5" />,
-  towels: <Shirt className="size-5" />,
-  showers: <Droplet className="size-5" />,
-  "luggage-storage": <Luggage className="size-5" />,
-  restrooms: <Toilet className="size-5" />,
-  spa: <Flower className="size-5" />,
-  "rooftop-pool": <Building2 className="size-5" />,
-  hottub: <Waves className="size-5" />,
-  lockers: <Lock className="size-5" />,
-  lazyriver: <Waves className="size-5" />,
-  waterslide: <TrendingDown className="size-5" />,
-  wheelchair: <Accessibility className="size-5" />,
-  "airport-shuttle": <Bus className="size-5" />,
-};
 
 const renderStars = (rating: number) => {
   const fullStars = Math.floor(rating);
@@ -79,7 +40,7 @@ const renderStars = (rating: number) => {
   );
 };
 
-export function HotelCard({ hotel }: HotelCardProps) {
+const HotelCard = ({ hotel }: HotelCardProps) => {
   const currencySymbol = "$";
   const rating = hotel.avgRating || hotel.rating || 0;
   const reviews = hotel.reviews || 0;
@@ -197,4 +158,6 @@ export function HotelCard({ hotel }: HotelCardProps) {
       </CardContent>
     </Card>
   );
-}
+};
+
+export default HotelCard;

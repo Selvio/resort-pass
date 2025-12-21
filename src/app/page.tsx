@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 
+import Filters from "@/components/Filters";
 import Header from "@/components/Header";
-import { HotelCard } from "@/components/HotelCard";
+import HotelCard from "@/components/HotelCard";
 import SearchBar from "@/components/SearchBar";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -29,6 +30,7 @@ export default function Home() {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
     new Date()
   );
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
   const handleLocationChange = (newLocation: string) => {
     setLocation(newLocation);
@@ -36,6 +38,10 @@ export default function Home() {
 
   const handleDateChange = (date: Date | undefined) => {
     setSelectedDate(date);
+  };
+
+  const handleFiltersClick = () => {
+    setFiltersOpen(true);
   };
 
   return (
@@ -54,8 +60,10 @@ export default function Home() {
             date={selectedDate}
             handleLocationChange={handleLocationChange}
             handleDateChange={handleDateChange}
+            onFiltersClick={handleFiltersClick}
           />
         </div>
+        <Filters open={filtersOpen} onOpenChange={setFiltersOpen} />
       </div>
       <Tabs defaultValue="all" className="flex flex-col flex-1 min-h-0">
         <div className="shrink-0">

@@ -62,7 +62,7 @@ const DatePicker = ({ date, onDateChange, trigger }: DatePickerProps) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{trigger || defaultTrigger}</DialogTrigger>
       <DialogContent
-        className="bg-white max-w-full sm:max-w-full top-auto bottom-0 translate-y-0 -translate-x-1/2 left-1/2 rounded-t-sm rounded-b-none p-0 gap-0 max-h-[66vh] flex flex-col pt-4"
+        className="max-w-full top-auto bottom-0 translate-y-0 -translate-x-1/2 left-1/2 rounded-t-sm rounded-b-none p-0 gap-0 max-h-[66vh] flex flex-col pt-4"
         showCloseButton={false}
       >
         <DialogTitle className="sr-only">Select date</DialogTitle>

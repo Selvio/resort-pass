@@ -33,3 +33,18 @@ export function getHotelImages(hotel: Hotel): string[] {
         : [];
   return allImages;
 }
+
+/**
+ * Gets the label for a hotel class option
+ * @param option - The hotel class option to get the label for
+ * @returns The label for the hotel class option
+ */
+export function getHotelClassLabel(option: string): string {
+  if (option === "any") {
+    return "Any";
+  }
+  if (option === "5-star") {
+    return "5 Star hotels";
+  }
+  return "4 Star+ Hotels";
+}

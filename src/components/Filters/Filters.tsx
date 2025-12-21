@@ -1,7 +1,6 @@
 "use client";
 
 import { X } from "lucide-react";
-import { useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -13,8 +12,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
+import { useSearch } from "@/contexts/SearchContext";
 import { amenityIcons } from "@/lib/amenityIcons";
-import { cn } from "@/lib/utils";
+import { cn, getHotelClassLabel } from "@/lib/utils";
 
 import FilterSection from "./FilterSection";
 
@@ -42,73 +42,17 @@ const amenities: Amenity[] = [
 const vibes: string[] = ["Family-Friendly", "Serene", "Luxe", "Trendy"];
 
 const Filters = ({ open, onOpenChange }: FiltersProps) => {
-  const [onlyAvailable, setOnlyAvailable] = useState(true);
-  const [selectedHotelClass, setSelectedHotelClass] = useState("any");
-  const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
-  const [selectedVibes, setSelectedVibes] = useState<string[]>([]);
-  const [topRated, setTopRated] = useState(false);
-  const [appliedFilters, setAppliedFilters] = useState<string[]>(["Available"]);
-
-  const handleClearAll = () => {
-    setOnlyAvailable(false);
-    setSelectedHotelClass("any");
-    setSelectedAmenities([]);
-    setSelectedVibes([]);
-    setTopRated(false);
-    setAppliedFilters([]);
-  };
-
-  const handleRemoveFilter = (filter: string) => {
-    if (filter === "Available") {
-      setOnlyAvailable(false);
-      setAppliedFilters(appliedFilters.filter((f) => f !== filter));
-    } else if (filter === "Top Rated") {
-      setTopRated(false);
-      setAppliedFilters(appliedFilters.filter((f) => f !== filter));
-    } else if (vibes.includes(filter)) {
-      setSelectedVibes(selectedVibes.filter((v) => v !== filter));
-      setAppliedFilters(appliedFilters.filter((f) => f !== filter));
-    } else {
-      setAppliedFilters(appliedFilters.filter((f) => f !== filter));
-      setSelectedAmenities(
-        selectedAmenities.filter((a) => {
-          const amenity = amenities.find((am) => am.label === filter);
-          return amenity ? a !== amenity.id : true;
-        })
-      );
-    }
-  };
-
-  const handleAmenityToggle = (amenityId: string, label: string) => {
-    if (selectedAmenities.includes(amenityId)) {
-      setSelectedAmenities(selectedAmenities.filter((id) => id !== amenityId));
-      setAppliedFilters(appliedFilters.filter((f) => f !== label));
-    } else {
-      setSelectedAmenities([...selectedAmenities, amenityId]);
-      setAppliedFilters([...appliedFilters, label]);
-    }
-  };
-
-  const handleVibeToggle = (vibe: string) => {
-    if (selectedVibes.includes(vibe)) {
-      setSelectedVibes(selectedVibes.filter((v) => v !== vibe));
-      setAppliedFilters(appliedFilters.filter((f) => f !== vibe));
-    } else {
-      setSelectedVibes([...selectedVibes, vibe]);
-      setAppliedFilters([...appliedFilters, vibe]);
-    }
-  };
-
-  const handleTopRatedToggle = (checked: boolean) => {
-    setTopRated(checked);
-    if (checked) {
-      if (!appliedFilters.includes("Top Rated")) {
-        setAppliedFilters([...appliedFilters, "Top Rated"]);
-      }
-    } else {
-      setAppliedFilters(appliedFilters.filter((f) => f !== "Top Rated"));
-    }
-  };
+  const {
+    state,
+    appliedFilters,
+    setOnlyAvailable,
+    setSelectedHotelClass,
+    toggleAmenity,
+    toggleVibe,
+    setTopRated,
+    clearAllFilters,
+    removeFilter,
+  } = useSearch();
 
   const handleShowResults = () => {
     onOpenChange(false);
@@ -136,7 +80,7 @@ const Filters = ({ open, onOpenChange }: FiltersProps) => {
             {appliedFilters.length > 0 ? (
               <Button
                 variant="ghost"
-                onClick={handleClearAll}
+                onClick={clearAllFilters}
                 className="text-brand hover:text-brand/80 text-base p-0 w-fit ml-auto"
               >
                 Clear all
@@ -165,7 +109,7 @@ const Filters = ({ open, onOpenChange }: FiltersProps) => {
                     >
                       {filter}
                       <button
-                        onClick={() => handleRemoveFilter(filter)}
+                        onClick={() => removeFilter(filter)}
                         className="hover:opacity-70"
                       >
                         <X className="size-3" />
@@ -186,18 +130,9 @@ const Filters = ({ open, onOpenChange }: FiltersProps) => {
                 </label>
                 <Checkbox
                   id="available"
-                  checked={onlyAvailable}
+                  checked={state.onlyAvailable}
                   onCheckedChange={(checked) => {
                     setOnlyAvailable(checked === true);
-                    if (checked) {
-                      if (!appliedFilters.includes("Available")) {
-                        setAppliedFilters([...appliedFilters, "Available"]);
-                      }
-                    } else {
-                      setAppliedFilters(
-                        appliedFilters.filter((f) => f !== "Available")
-                      );
-                    }
                   }}
                 />
               </div>
@@ -208,13 +143,8 @@ const Filters = ({ open, onOpenChange }: FiltersProps) => {
             <FilterSection title="Hotel Class">
               <div className="flex flex-wrap gap-2">
                 {["any", "5-star", "4-star+"].map((option) => {
-                  const label =
-                    option === "any"
-                      ? "Any"
-                      : option === "5-star"
-                        ? "5 Star hotels"
-                        : "4 Star+ Hotels";
-                  const isSelected = selectedHotelClass === option;
+                  const label = getHotelClassLabel(option);
+                  const isSelected = state.selectedHotelClass === option;
                   return (
                     <Button
                       key={option}
@@ -242,7 +172,9 @@ const Filters = ({ open, onOpenChange }: FiltersProps) => {
               <div className="space-y-3">
                 {amenities.map((amenity) => {
                   const icon = amenityIcons[amenity.iconKey];
-                  const isSelected = selectedAmenities.includes(amenity.id);
+                  const isSelected = state.selectedAmenities.includes(
+                    amenity.id
+                  );
                   return (
                     <div
                       key={amenity.id}
@@ -260,9 +192,7 @@ const Filters = ({ open, onOpenChange }: FiltersProps) => {
                       <Checkbox
                         id={amenity.id}
                         checked={isSelected}
-                        onCheckedChange={() =>
-                          handleAmenityToggle(amenity.id, amenity.label)
-                        }
+                        onCheckedChange={() => toggleAmenity(amenity.id)}
                       />
                     </div>
                   );
@@ -275,7 +205,7 @@ const Filters = ({ open, onOpenChange }: FiltersProps) => {
             <FilterSection title="Vibes">
               <div className="space-y-3">
                 {vibes.map((vibe) => {
-                  const isSelected = selectedVibes.includes(vibe);
+                  const isSelected = state.selectedVibes.includes(vibe);
                   return (
                     <div
                       key={vibe}
@@ -290,7 +220,7 @@ const Filters = ({ open, onOpenChange }: FiltersProps) => {
                       <Checkbox
                         id={`vibe-${vibe}`}
                         checked={isSelected}
-                        onCheckedChange={() => handleVibeToggle(vibe)}
+                        onCheckedChange={() => toggleVibe(vibe)}
                       />
                     </div>
                   );
@@ -310,10 +240,8 @@ const Filters = ({ open, onOpenChange }: FiltersProps) => {
                 </label>
                 <Checkbox
                   id="top-rated"
-                  checked={topRated}
-                  onCheckedChange={(checked) =>
-                    handleTopRatedToggle(checked === true)
-                  }
+                  checked={state.topRated}
+                  onCheckedChange={(checked) => setTopRated(!!checked)}
                 />
               </div>
             </FilterSection>

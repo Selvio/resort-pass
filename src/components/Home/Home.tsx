@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { SearchX } from "lucide-react";
+import { useState, useMemo } from "react";
 
 import Filters from "@/components/Filters";
 import Header from "@/components/Header";
@@ -8,28 +9,49 @@ import HotelCard from "@/components/HotelCard";
 import SearchBar from "@/components/SearchBar";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  getAllHotels,
-  filterHotelsByPool,
-  filterHotelsBySpa,
-  filterHotelsByDayRoom,
-} from "@/lib/hotels";
+import { useSearch } from "@/contexts/SearchContext";
+import { applyFilters } from "@/lib/hotelFilters";
+import { getAllHotels } from "@/lib/hotels";
+import { searchLocations } from "@/lib/locations";
 import { SearchResponse } from "@/types";
 
 import mockData from "../../../mock.json";
 
 const hotels = getAllHotels(mockData as unknown as SearchResponse);
 
-const poolHotels = filterHotelsByPool(hotels);
-const spaHotels = filterHotelsBySpa(hotels);
-const dayRoomHotels = filterHotelsByDayRoom(hotels);
+const TABS_CONFIG = [
+  { value: "all", label: "All", titlePrefix: "Hotel" },
+  { value: "pool", label: "Pool", titlePrefix: "Pool" },
+  { value: "spa", label: "Spa", titlePrefix: "Spa" },
+  { value: "day-room", label: "Day Room", titlePrefix: "Day room" },
+];
 
 const Home = () => {
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("all");
+  const { state: searchState, clearAllFilters } = useSearch();
 
   const handleFiltersClick = () => {
     setFiltersOpen(true);
   };
+
+  const handleClearFilters = () => {
+    clearAllFilters();
+  };
+
+  // Apply all filters based on search state and active tab
+  const filteredHotels = useMemo(
+    () => applyFilters(hotels, searchState, activeTab),
+    [searchState, activeTab]
+  );
+
+  // Get the selected location name
+  const selectedLocationName = useMemo(() => {
+    const location = searchLocations.find(
+      (loc) => loc.id === searchState.location
+    );
+    return location?.name ?? "";
+  }, [searchState.location]);
 
   return (
     <div className="text-sm h-screen flex flex-col overflow-hidden">
@@ -46,67 +68,50 @@ const Home = () => {
         </div>
         <Filters open={filtersOpen} onOpenChange={setFiltersOpen} />
       </div>
-      <Tabs defaultValue="all" className="flex flex-col flex-1 min-h-0">
+      <Tabs
+        value={activeTab}
+        onValueChange={setActiveTab}
+        className="flex flex-col flex-1 min-h-0"
+      >
         <div className="shrink-0">
           <TabsList>
-            <TabsTrigger value="all">All</TabsTrigger>
-            <TabsTrigger value="pool">Pool</TabsTrigger>
-            <TabsTrigger value="spa">Spa</TabsTrigger>
-            <TabsTrigger value="day-room">Day Room</TabsTrigger>
+            {TABS_CONFIG.map((tab) => (
+              <TabsTrigger key={tab.value} value={tab.value}>
+                {tab.label}
+              </TabsTrigger>
+            ))}
           </TabsList>
         </div>
-        <TabsContent
-          value="all"
-          className="px-4 py-6 overflow-y-auto flex-1 min-h-0"
-        >
-          <div className="px-4 py-6 text-base">
-            Hotel day passes in and near Hawaii
-          </div>
-          <div className="grid grid-cols-1 gap-4">
-            {hotels.map((hotel) => (
-              <HotelCard key={hotel.id} hotel={hotel} />
-            ))}
-          </div>
-        </TabsContent>
-        <TabsContent
-          value="pool"
-          className="px-4 py-6 overflow-y-auto flex-1 min-h-0"
-        >
-          <div className="px-4 py-6 text-base">
-            Pool day passes in and near Hawaii
-          </div>
-          <div className="grid grid-cols-1 gap-4">
-            {poolHotels.map((hotel) => (
-              <HotelCard key={hotel.id} hotel={hotel} />
-            ))}
-          </div>
-        </TabsContent>
-        <TabsContent
-          value="spa"
-          className="px-4 py-6 overflow-y-auto flex-1 min-h-0"
-        >
-          <div className="px-4 py-6 text-base">
-            Spa day passes in and near Hawaii
-          </div>
-          <div className="grid grid-cols-1 gap-4">
-            {spaHotels.map((hotel) => (
-              <HotelCard key={hotel.id} hotel={hotel} />
-            ))}
-          </div>
-        </TabsContent>
-        <TabsContent
-          value="day-room"
-          className="px-4 py-6 overflow-y-auto flex-1 min-h-0"
-        >
-          <div className="px-4 py-6 text-base">
-            Day room passes in and near Hawaii
-          </div>
-          <div className="grid grid-cols-1 gap-4">
-            {dayRoomHotels.map((hotel) => (
-              <HotelCard key={hotel.id} hotel={hotel} />
-            ))}
-          </div>
-        </TabsContent>
+        {TABS_CONFIG.map((tab) => (
+          <TabsContent
+            key={tab.value}
+            value={tab.value}
+            className="px-4 py-6 overflow-y-auto flex-1 min-h-0"
+          >
+            <div className="px-4 py-6 text-base">
+              {tab.titlePrefix} day passes in and near {selectedLocationName}
+            </div>
+            {filteredHotels.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-16 px-4">
+                <SearchX className="size-12 text-secondary mb-4" />
+                <h3 className="text-lg font-medium mb-2">No hotels found</h3>
+                <p className="text-sm text-secondary text-center mb-6 max-w-sm">
+                  We couldn&apos;t find any hotels matching your filters. Try
+                  adjusting your search criteria or clearing some filters.
+                </p>
+                <Button onClick={handleClearFilters} variant="outline">
+                  Clear all filters
+                </Button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 gap-4">
+                {filteredHotels.map((hotel) => (
+                  <HotelCard key={hotel.id} hotel={hotel} />
+                ))}
+              </div>
+            )}
+          </TabsContent>
+        ))}
       </Tabs>
     </div>
   );

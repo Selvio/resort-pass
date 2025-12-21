@@ -21,67 +21,81 @@ const dayRoomHotels = filterHotelsByDayRoom(hotels);
 
 export default function Home() {
   return (
-    <div className="text-sm">
-      <div className="text-center p-3 bg-brand-shade text-white font-bold">
-        Get the ResortPass App{" "}
-        <Button variant="link" className="p-0 h-fit">
-          Download
-        </Button>
-      </div>
-      <Header />
-      <div className="flex flex-col gap-1 pt-4">
-        <div className="px-4">
+    <div className="text-sm h-screen flex flex-col overflow-hidden">
+      <div className="shrink-0">
+        <div className="text-center p-3 bg-brand-shade text-white font-bold">
+          Get the ResortPass App{" "}
+          <Button variant="link" className="p-0 h-fit">
+            Download
+          </Button>
+        </div>
+        <Header />
+        <div className="px-4 pt-4">
           <SearchBar />
         </div>
-        <Tabs defaultValue="all">
+      </div>
+      <Tabs defaultValue="all" className="flex flex-col flex-1 min-h-0">
+        <div className="shrink-0">
           <TabsList>
             <TabsTrigger value="all">All</TabsTrigger>
             <TabsTrigger value="pool">Pool</TabsTrigger>
             <TabsTrigger value="spa">Spa</TabsTrigger>
             <TabsTrigger value="day-room">Day Room</TabsTrigger>
           </TabsList>
-          <TabsContent value="all" className="px-4 py-6">
-            <div className="px-4 py-6 text-base">
-              Hotel day passes in and near Hawaii
-            </div>
-            <div className="grid grid-cols-1 gap-4">
-              {hotels.map((hotel) => (
-                <HotelCard key={hotel.id} hotel={hotel} />
-              ))}
-            </div>
-          </TabsContent>
-          <TabsContent value="pool" className="px-4 py-6">
-            <div className="px-4 py-6 text-base">
-              Pool day passes in and near Hawaii
-            </div>
-            <div className="grid grid-cols-1 gap-4">
-              {poolHotels.map((hotel) => (
-                <HotelCard key={hotel.id} hotel={hotel} />
-              ))}
-            </div>
-          </TabsContent>
-          <TabsContent value="spa" className="px-4 py-6">
-            <div className="px-4 py-6 text-base">
-              Spa day passes in and near Hawaii
-            </div>
-            <div className="grid grid-cols-1 gap-4">
-              {spaHotels.map((hotel) => (
-                <HotelCard key={hotel.id} hotel={hotel} />
-              ))}
-            </div>
-          </TabsContent>
-          <TabsContent value="day-room" className="px-4 py-6">
-            <div className="px-4 py-6 text-base">
-              Day room passes in and near Hawaii
-            </div>
-            <div className="grid grid-cols-1 gap-4">
-              {dayRoomHotels.map((hotel) => (
-                <HotelCard key={hotel.id} hotel={hotel} />
-              ))}
-            </div>
-          </TabsContent>
-        </Tabs>
-      </div>
+        </div>
+        <TabsContent
+          value="all"
+          className="px-4 py-6 overflow-y-auto flex-1 min-h-0"
+        >
+          <div className="px-4 py-6 text-base">
+            Hotel day passes in and near Hawaii
+          </div>
+          <div className="grid grid-cols-1 gap-4">
+            {hotels.map((hotel) => (
+              <HotelCard key={hotel.id} hotel={hotel} />
+            ))}
+          </div>
+        </TabsContent>
+        <TabsContent
+          value="pool"
+          className="px-4 py-6 overflow-y-auto flex-1 min-h-0"
+        >
+          <div className="px-4 py-6 text-base">
+            Pool day passes in and near Hawaii
+          </div>
+          <div className="grid grid-cols-1 gap-4">
+            {poolHotels.map((hotel) => (
+              <HotelCard key={hotel.id} hotel={hotel} />
+            ))}
+          </div>
+        </TabsContent>
+        <TabsContent
+          value="spa"
+          className="px-4 py-6 overflow-y-auto flex-1 min-h-0"
+        >
+          <div className="px-4 py-6 text-base">
+            Spa day passes in and near Hawaii
+          </div>
+          <div className="grid grid-cols-1 gap-4">
+            {spaHotels.map((hotel) => (
+              <HotelCard key={hotel.id} hotel={hotel} />
+            ))}
+          </div>
+        </TabsContent>
+        <TabsContent
+          value="day-room"
+          className="px-4 py-6 overflow-y-auto flex-1 min-h-0"
+        >
+          <div className="px-4 py-6 text-base">
+            Day room passes in and near Hawaii
+          </div>
+          <div className="grid grid-cols-1 gap-4">
+            {dayRoomHotels.map((hotel) => (
+              <HotelCard key={hotel.id} hotel={hotel} />
+            ))}
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

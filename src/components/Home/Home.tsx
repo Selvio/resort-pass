@@ -58,9 +58,14 @@ const Home = ({ hotels, currency }: HomeProps) => {
       <div className="shrink-0">
         <div className="text-center p-3 bg-brand-shade text-white font-bold lg:hidden">
           Get the ResortPass App{" "}
-          <Button variant="link" className="p-0 h-fit">
+          <a
+            href="https://apps.apple.com/us/app/resortpass/id1557539492"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline"
+          >
             Download
-          </Button>
+          </a>
         </div>
         <Header />
         <div className="px-4 pt-4 md:px-6 lg:px-8">

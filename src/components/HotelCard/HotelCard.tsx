@@ -1,5 +1,5 @@
 import { ChevronRight, Star } from "lucide-react";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -41,6 +41,7 @@ const renderStars = (rating: number) => {
 };
 
 const HotelCard = ({ hotel }: HotelCardProps) => {
+  const [showAllProducts, setShowAllProducts] = useState(false);
   const currencySymbol = "$";
   const rating = hotel.avgRating || hotel.rating || 0;
   const reviews = hotel.reviews || 0;
@@ -50,9 +51,20 @@ const HotelCard = ({ hotel }: HotelCardProps) => {
   // Get first 5 amenities for display
   const displayedAmenities = hotel.amenities?.slice(0, 5) || [];
 
-  // Get first 3 products for display
-  const displayedProducts = hotel.products?.slice(0, 3) || [];
-  const remainingProductsCount = Math.max(0, (hotel.products?.length || 0) - 3);
+  // Get products for display based on showAllProducts state
+  const allProducts = hotel.products || [];
+  const displayedProducts = showAllProducts
+    ? allProducts
+    : allProducts.slice(0, 3);
+  const remainingProductsCount = Math.max(0, allProducts.length - 3);
+
+  const handleViewAllClick = () => {
+    setShowAllProducts(true);
+  };
+
+  const handleShowLessClick = () => {
+    setShowAllProducts(false);
+  };
 
   return (
     <Card className="overflow-hidden">
@@ -145,11 +157,18 @@ const HotelCard = ({ hotel }: HotelCardProps) => {
                 );
               })}
             </div>
-            {remainingProductsCount > 0 && (
+            {!showAllProducts && remainingProductsCount > 0 && (
               <div className="flex items-center justify-between pt-1">
                 <span>+{remainingProductsCount} more experiences</span>
-                <Button>
+                <Button onClick={handleViewAllClick}>
                   View All <ChevronRight className="size-5" />
+                </Button>
+              </div>
+            )}
+            {showAllProducts && allProducts.length > 3 && (
+              <div className="flex items-center justify-center pt-1">
+                <Button onClick={handleShowLessClick} variant="outline">
+                  Show Less
                 </Button>
               </div>
             )}

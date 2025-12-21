@@ -26,9 +26,16 @@ const dayRoomHotels = filterHotelsByDayRoom(hotels);
 
 export default function Home() {
   const [location, setLocation] = useState<string>(searchLocations[0].id);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
+    new Date()
+  );
 
   const handleLocationChange = (newLocation: string) => {
     setLocation(newLocation);
+  };
+
+  const handleDateChange = (date: Date | undefined) => {
+    setSelectedDate(date);
   };
 
   return (
@@ -44,7 +51,9 @@ export default function Home() {
         <div className="px-4 pt-4">
           <SearchBar
             location={location}
+            date={selectedDate}
             handleLocationChange={handleLocationChange}
+            handleDateChange={handleDateChange}
           />
         </div>
       </div>

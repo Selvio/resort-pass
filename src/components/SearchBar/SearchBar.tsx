@@ -1,24 +1,25 @@
 "use client";
 
-import { Calendar, SlidersHorizontal } from "lucide-react";
+import { SlidersHorizontal } from "lucide-react";
 
+import DatePicker from "@/components/DatePicker";
 import LocationSearch from "@/components/LocationSearch";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
 interface SearchBarProps {
   location: string;
-  date?: string;
+  date?: Date;
   handleLocationChange: (location: string) => void;
-  onDateClick?: () => void;
+  handleDateChange?: (date: Date | undefined) => void;
   onFiltersClick?: () => void;
 }
 
 const SearchBar = ({
   location,
-  date = "Feb 26",
+  date,
   handleLocationChange,
-  onDateClick,
+  handleDateChange,
   onFiltersClick,
 }: SearchBarProps) => {
   return (
@@ -33,10 +34,7 @@ const SearchBar = ({
 
         <div className="flex items-center justify-start flex-1">
           <Separator orientation="vertical" className="h-6! bg-gray-light" />
-          <Button onClick={onDateClick} variant="ghost">
-            <Calendar className="size-5 text-primary" />
-            {date}
-          </Button>
+          <DatePicker date={date} onDateChange={handleDateChange} />
         </div>
       </div>
 

@@ -2,6 +2,10 @@
 
 A hotel day pass booking platform built with Next.js. Search and filter hotels by location, amenities, dates, and more.
 
+## Live Demo
+
+🌐 **Live Application**: [https://resort-pass-eight.vercel.app/](https://resort-pass-eight.vercel.app/)
+
 ## Features
 
 - **Hotel Search**: Browse hotels with location-based filtering

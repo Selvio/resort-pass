@@ -137,7 +137,7 @@ const HotelCard = ({ hotel, currency }: HotelCardProps) => {
                   <Fragment key={product.id}>
                     <div className="flex items-center justify-between gap-2 md:gap-3">
                       <div className="text-sm md:text-base">{product.name}</div>
-                      <div className="flex items-center gap-1 md:gap-2 flex-shrink-0">
+                      <div className="flex items-center gap-1 md:gap-2 shrink-0">
                         {hasDiscount && (
                           <Badge
                             variant="success"

@@ -56,15 +56,17 @@ const Home = ({ hotels, currency }: HomeProps) => {
   return (
     <div className="text-sm h-screen flex flex-col overflow-hidden">
       <div className="shrink-0">
-        <div className="text-center p-3 bg-brand-shade text-white font-bold">
+        <div className="text-center p-3 bg-brand-shade text-white font-bold lg:hidden">
           Get the ResortPass App{" "}
           <Button variant="link" className="p-0 h-fit">
             Download
           </Button>
         </div>
         <Header />
-        <div className="px-4 pt-4">
-          <SearchBar onFiltersClick={handleFiltersClick} />
+        <div className="px-4 pt-4 md:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto">
+            <SearchBar onFiltersClick={handleFiltersClick} />
+          </div>
         </div>
         <Filters open={filtersOpen} onOpenChange={setFiltersOpen} />
       </div>
@@ -74,42 +76,50 @@ const Home = ({ hotels, currency }: HomeProps) => {
         className="flex flex-col flex-1 min-h-0"
       >
         <div className="shrink-0">
-          <TabsList>
-            {TABS_CONFIG.map((tab) => (
-              <TabsTrigger key={tab.value} value={tab.value}>
-                {tab.label}
-              </TabsTrigger>
-            ))}
-          </TabsList>
+          <div className="max-w-7xl mx-auto">
+            <TabsList>
+              {TABS_CONFIG.map((tab) => (
+                <TabsTrigger key={tab.value} value={tab.value}>
+                  {tab.label}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </div>
         </div>
         {TABS_CONFIG.map((tab) => (
           <TabsContent
             key={tab.value}
             value={tab.value}
-            className="px-4 py-6 overflow-y-auto flex-1 min-h-0"
+            className="px-4 py-6 overflow-y-auto flex-1 min-h-0 md:px-6 lg:px-8"
           >
-            <div className="px-4 py-6 text-base">
-              {tab.titlePrefix} day passes in and near {selectedLocationName}
+            <div className="max-w-7xl mx-auto">
+              <div className="px-4 py-6 text-base xl:px-0">
+                {tab.titlePrefix} day passes in and near {selectedLocationName}
+              </div>
+              {filteredHotels.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-16 px-4">
+                  <SearchX className="size-12 text-secondary mb-4" />
+                  <h3 className="text-lg font-medium mb-2">No hotels found</h3>
+                  <p className="text-sm text-secondary text-center mb-6 max-w-sm">
+                    We couldn&apos;t find any hotels matching your filters. Try
+                    adjusting your search criteria or clearing some filters.
+                  </p>
+                  <Button onClick={handleClearFilters} variant="outline">
+                    Clear all filters
+                  </Button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:px-6 lg:grid-cols-3 xl:px-0">
+                  {filteredHotels.map((hotel) => (
+                    <HotelCard
+                      key={hotel.id}
+                      hotel={hotel}
+                      currency={currency}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
-            {filteredHotels.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-16 px-4">
-                <SearchX className="size-12 text-secondary mb-4" />
-                <h3 className="text-lg font-medium mb-2">No hotels found</h3>
-                <p className="text-sm text-secondary text-center mb-6 max-w-sm">
-                  We couldn&apos;t find any hotels matching your filters. Try
-                  adjusting your search criteria or clearing some filters.
-                </p>
-                <Button onClick={handleClearFilters} variant="outline">
-                  Clear all filters
-                </Button>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 gap-4">
-                {filteredHotels.map((hotel) => (
-                  <HotelCard key={hotel.id} hotel={hotel} currency={currency} />
-                ))}
-              </div>
-            )}
           </TabsContent>
         ))}
       </Tabs>

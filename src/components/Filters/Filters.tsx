@@ -61,7 +61,10 @@ const Filters = ({ open, onOpenChange }: FiltersProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="max-w-full bottom-0 translate-y-0 translate-x-0 rounded-b-none left-0 right-0 top-2 p-0 grid grid-rows-[auto_1fr]"
+        className={cn(
+          "max-w-full bottom-0 translate-y-0 translate-x-0 rounded-b-none left-0 right-0 top-2 p-0 grid grid-rows-[auto_1fr]",
+          "lg:max-w-md lg:w-96 lg:left-1/2 lg:-translate-x-1/2 lg:top-1/2 lg:-translate-y-1/2 lg:bottom-auto lg:rounded-lg lg:max-h-[80vh] lg:flex lg:flex-col"
+        )}
         showCloseButton={false}
       >
         <div className="px-5 py-4 border-b border-gray-light h-fit">
@@ -95,8 +98,8 @@ const Filters = ({ open, onOpenChange }: FiltersProps) => {
           amenities
         </DialogDescription>
 
-        <div className="grid grid-rows-[1fr_auto] min-h-0">
-          <div className="flex flex-col gap-6 p-6 overflow-y-auto min-h-0">
+        <div className="grid grid-rows-[1fr_auto] min-h-0 lg:flex lg:flex-col lg:h-full lg:max-h-[80vh]">
+          <div className="flex flex-col gap-6 p-6 overflow-y-auto min-h-0 lg:flex-1">
             {appliedFilters.length > 0 && (
               <div className="space-y-2">
                 <div className="text-sm font-medium">Applied Filters</div>

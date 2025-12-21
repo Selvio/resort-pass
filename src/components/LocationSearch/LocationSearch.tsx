@@ -58,7 +58,7 @@ const LocationSearch = ({ value, onValueChange }: LocationSearchProps) => {
     <>
       <Button
         variant="ghost"
-        className="w-full justify-start"
+        className="w-full justify-start rounded-none"
         onClick={() => setOpen(true)}
       >
         <MapPin className="size-5 text-primary shrink-0" />
@@ -69,17 +69,21 @@ const LocationSearch = ({ value, onValueChange }: LocationSearchProps) => {
         onOpenChange={setOpen}
         title="Search Location"
         description="Search for a location or hotel"
-        className="max-w-[500px]"
+        className="max-w-lg md:top-1/2 md:-translate-y-1/2 md:bottom-auto md:max-h-[50vh] md:flex md:flex-col"
       >
-        <Command shouldFilter={false} value={value}>
-          <div className="flex items-center p-4 relative">
+        <Command
+          shouldFilter={false}
+          value={value}
+          className="flex flex-col h-full min-h-0 md:h-[50vh] md:max-h-[50vh]"
+        >
+          <div className="flex items-center p-4 relative shrink-0">
             <div className="flex-1 flex items-center">
               <CommandPrimitive.Input
                 placeholder="Search location..."
                 value={searchValue}
                 onValueChange={setSearchValue}
                 className={cn(
-                  "flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none disabled:cursor-not-allowed disabled:opacity-50 flex-1 border border-gray-light",
+                  "flex h-10 md:h-12 w-full rounded-md bg-transparent py-3 text-sm md:text-base outline-none disabled:cursor-not-allowed disabled:opacity-50 flex-1 border border-gray-light",
                   "placeholder:text-muted-foreground py-3 px-8"
                 )}
               />

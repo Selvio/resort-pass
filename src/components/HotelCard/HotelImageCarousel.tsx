@@ -41,13 +41,13 @@ const HotelImageCarousel = ({ hotel }: HotelImageCarouselProps) => {
           <CarouselContent>
             {allImages.map((imageUrl, index) => (
               <CarouselItem key={index} className="h-full">
-                <div className="relative w-full h-full aspect-4/3 bg-gray-light">
+                <div className="relative w-full h-full aspect-4/3 md:aspect-video bg-gray-light">
                   <Image
                     src={imageUrl}
                     alt={`${hotel.name} - Image ${index + 1}`}
                     fill
                     className="object-cover h-full"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   />
                 </div>
               </CarouselItem>
@@ -61,15 +61,16 @@ const HotelImageCarousel = ({ hotel }: HotelImageCarouselProps) => {
       )}
 
       {allImages.length > 1 && (
-        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1 z-10">
+        <div className="absolute bottom-3 md:bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1 md:gap-1.5 z-10">
           {allImages.map((_, index) => (
             <button
               key={index}
               type="button"
               onClick={() => api?.scrollTo(index)}
               className={cn("rounded-full transition-all", {
-                "bg-white size-2": current === index + 1,
-                "bg-white/50 hover:bg-white/75 size-1.5": current !== index + 1,
+                "bg-white size-2 md:size-2.5": current === index + 1,
+                "bg-white/50 hover:bg-white/75 size-1.5 md:size-2":
+                  current !== index + 1,
               })}
               aria-label={`Go to slide ${index + 1}`}
             />

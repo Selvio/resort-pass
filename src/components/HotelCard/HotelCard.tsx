@@ -24,18 +24,24 @@ const renderStars = (rating: number) => {
   return (
     <div className="flex items-center gap-0.5">
       {Array.from({ length: fullStars }).map((_, i) => (
-        <Star key={`full-${i}`} className="size-3 fill-black text-black" />
+        <Star
+          key={`full-${i}`}
+          className="size-3 md:size-4 fill-black text-black"
+        />
       ))}
       {hasHalfStar && (
-        <div className="relative size-3 overflow-hidden">
-          <Star className="absolute size-3 fill-black/20 text-black/20" />
+        <div className="relative size-3 md:size-4 overflow-hidden">
+          <Star className="absolute size-3 md:size-4 fill-black/20 text-black/20" />
           <div className="absolute left-0 top-0 h-full w-1/2 overflow-hidden">
-            <Star className="size-3 fill-black text-black" />
+            <Star className="size-3 md:size-4 fill-black text-black" />
           </div>
         </div>
       )}
       {Array.from({ length: emptyStars }).map((_, i) => (
-        <Star key={`empty-${i}`} className="size-3 fill-none text-black/20" />
+        <Star
+          key={`empty-${i}`}
+          className="size-3 md:size-4 fill-none text-black/20"
+        />
       ))}
     </div>
   );
@@ -70,24 +76,28 @@ const HotelCard = ({ hotel, currency }: HotelCardProps) => {
   return (
     <Card className="overflow-hidden">
       <HotelImageCarousel hotel={hotel} />
-      <CardContent className="p-4">
-        <h2 className="font-medium text-base mb-0.5">{hotel.name}</h2>
+      <CardContent className="p-4 md:p-5 lg:p-6">
+        <h2 className="font-medium text-base md:text-lg mb-0.5 md:mb-1">
+          {hotel.name}
+        </h2>
 
-        <div className="flex items-center gap-2 flex-wrap mb-1">
+        <div className="flex items-center gap-2 flex-wrap mb-1 md:mb-2">
           <div className="flex items-center gap-1.5">
             {renderStars(rating)}
-            {rating.toFixed(1)}
-            <span className="text-sm text-secondary">({reviews})</span>
+            <span className="text-sm md:text-base">{rating.toFixed(1)}</span>
+            <span className="text-sm md:text-base text-secondary">
+              ({reviews})
+            </span>
           </div>
           <span className="text-secondary">|</span>
-          <span className="text-sm text-secondary">
+          <span className="text-sm md:text-base text-secondary">
             {location}
             {primaryVibe && ` | ${primaryVibe}`}
           </span>
         </div>
 
         {displayedAmenities.length > 0 && (
-          <div className="flex items-center gap-1 flex-wrap mb-4">
+          <div className="flex items-center gap-1 md:gap-1.5 flex-wrap mb-4 md:mb-5">
             {displayedAmenities.map((amenity, index) => {
               const amenityKey = amenity.name.toLowerCase();
               const icon =
@@ -112,8 +122,8 @@ const HotelCard = ({ hotel, currency }: HotelCardProps) => {
         )}
 
         {displayedProducts.length > 0 && (
-          <div className="flex flex-col gap-6">
-            <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-6 md:gap-5">
+            <div className="flex flex-col gap-4 md:gap-3">
               {displayedProducts.map((product, index) => {
                 const hasDiscount = product.discountPercentage > 0;
                 const originalPrice = product.isStrikethroughPricing
@@ -125,11 +135,14 @@ const HotelCard = ({ hotel, currency }: HotelCardProps) => {
 
                 return (
                   <Fragment key={product.id}>
-                    <div className="flex items-center justify-between gap-2">
-                      <div>{product.name}</div>
-                      <div className="flex items-center gap-1">
+                    <div className="flex items-center justify-between gap-2 md:gap-3">
+                      <div className="text-sm md:text-base">{product.name}</div>
+                      <div className="flex items-center gap-1 md:gap-2 flex-shrink-0">
                         {hasDiscount && (
-                          <Badge variant="success">
+                          <Badge
+                            variant="success"
+                            className="text-xs md:text-sm"
+                          >
                             Save{" "}
                             {Number(
                               (product.discountPercentage * 100).toFixed(1)
@@ -137,17 +150,27 @@ const HotelCard = ({ hotel, currency }: HotelCardProps) => {
                             %
                           </Badge>
                         )}
-                        {isSoldOut && <Badge variant="default">Sold Out</Badge>}
+                        {isSoldOut && (
+                          <Badge
+                            variant="default"
+                            className="text-xs md:text-sm"
+                          >
+                            Sold Out
+                          </Badge>
+                        )}
                         {showAvailabilityBadge && (
-                          <Badge variant="warning">
+                          <Badge
+                            variant="warning"
+                            className="text-xs md:text-sm"
+                          >
                             Only {product.quantity} Left
                           </Badge>
                         )}
-                        <span className="text-base">
+                        <span className="text-base md:text-lg font-medium">
                           {formatPrice(product.price, currencySymbol)}
                         </span>
                         {originalPrice && (
-                          <span className="text-xs text-secondary line-through">
+                          <span className="text-xs md:text-sm text-secondary line-through">
                             {formatPrice(originalPrice, currencySymbol)}
                           </span>
                         )}
@@ -160,15 +183,26 @@ const HotelCard = ({ hotel, currency }: HotelCardProps) => {
             </div>
             {!showAllProducts && remainingProductsCount > 0 && (
               <div className="flex items-center justify-between pt-1">
-                <span>+{remainingProductsCount} more experiences</span>
-                <Button onClick={handleViewAllClick}>
+                <span className="text-sm md:text-base">
+                  +{remainingProductsCount} more experiences
+                </span>
+                <Button
+                  onClick={handleViewAllClick}
+                  size="sm"
+                  className="md:size-default"
+                >
                   View All <ChevronRight className="size-5" />
                 </Button>
               </div>
             )}
             {showAllProducts && allProducts.length > 3 && (
               <div className="flex items-center justify-center pt-1">
-                <Button onClick={handleShowLessClick} variant="outline">
+                <Button
+                  onClick={handleShowLessClick}
+                  variant="outline"
+                  size="sm"
+                  className="md:size-default"
+                >
                   Show Less
                 </Button>
               </div>

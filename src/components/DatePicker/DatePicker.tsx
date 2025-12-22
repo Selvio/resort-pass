@@ -14,6 +14,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { cn } from "@/lib/utils";
 
 interface DatePickerProps {
   date?: Date;
@@ -62,7 +63,10 @@ const DatePicker = ({ date, onDateChange, trigger }: DatePickerProps) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{trigger || defaultTrigger}</DialogTrigger>
       <DialogContent
-        className="max-w-full top-auto bottom-0 translate-y-0 -translate-x-1/2 left-1/2 rounded-t-sm rounded-b-none p-0 gap-0 max-h-[66vh] flex flex-col pt-4 md:max-w-md md:top-1/2 md:bottom-auto md:-translate-y-1/2 md:rounded-lg md:max-h-[80vh]"
+        className={cn(
+          "max-w-full top-auto bottom-0 translate-y-0 -translate-x-1/2 left-1/2 rounded-t-sm rounded-b-none p-0 gap-0",
+          "flex flex-col pt-4 md:max-w-md md:top-1/2 md:bottom-auto md:-translate-y-1/2 md:rounded-lg"
+        )}
         showCloseButton={false}
       >
         <DialogTitle className="sr-only">Select date</DialogTitle>
@@ -84,7 +88,7 @@ const DatePicker = ({ date, onDateChange, trigger }: DatePickerProps) => {
           </TabsList>
           <TabsContent
             value="date"
-            className="mt-0 p-6 flex flex-col flex-1 min-h-0 overflow-y-auto"
+            className="mt-0 p-6 flex flex-col flex-1 min-h-100 overflow-y-auto"
           >
             <div className="flex-1">
               <Calendar
